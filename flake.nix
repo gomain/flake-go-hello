@@ -23,7 +23,10 @@
 
         # Provide some binary packages for selected system types.
         packages = {
-          go-hello = pkgs.buildGoModule {
+          # The default package for 'nix build'. This makes sense if the
+          # flake provides only one package or there is a clear "main"
+          # package.
+          default = pkgs.buildGoModule {
             pname = "go-hello";
             inherit version;
             # In 'nix develop', we don't need a copy of the source tree
@@ -47,7 +50,7 @@
         apps = {
           default = {
             type = "app";
-            program = "${self.packages.${system}.go-hello}/bin/go-hello";
+            program = "${self.packages.${system}.default}/bin/go-hello";
           };
         };
 
@@ -57,10 +60,5 @@
             buildInputs = with pkgs; [ go gopls gotools go-tools ];
           };
         };
-
-        # The default package for 'nix build'. This makes sense if the
-        # flake provides only one package or there is a clear "main"
-        # package.
-        defaultPackage = self.packages.${system}.go-hello;
       });
 }
