@@ -52,6 +52,13 @@
           };
         });
 
+      apps = forAllSystems (system: {
+        default = {
+          type = "app";
+          program = "${self.packages.${system}.go-hello}/bin/go-hello";
+        };
+      });
+
       # Add dependencies that are only needed for development
       devShells = forAllSystems (system:
         let
